@@ -1,0 +1,5 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="@color/gray"/>
+    <size android:width="@dimen/rating_status_bar_diameter" android:height="@dimen/rating_status_bar_diameter" />
+</shape>

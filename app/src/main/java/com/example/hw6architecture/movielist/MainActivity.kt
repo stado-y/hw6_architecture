@@ -1,0 +1,77 @@
+package com.example.hw6architecture.movielist
+
+import android.app.Application
+import android.content.ContentValues.TAG
+import android.content.Intent
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
+import com.example.hw6architecture.MoviesViewModel
+import com.example.hw6architecture.PersistentApplication
+import com.example.hw6architecture.R
+import com.example.hw6architecture.data.network.ImdbApiClient
+import com.example.hw6architecture.data.network.MoviesListItem
+import com.example.hw6architecture.data.network.MoviesListResponse
+import com.example.hw6architecture.data.network.NetworkBuilder
+import com.example.hw6architecture.databinding.ActivityMainBinding
+import com.example.hw6architecture.immutable_values.Constants
+import com.example.hw6architecture.moviedetails.MovieDetailsActivity
+import kotlinx.coroutines.*
+
+class MainActivity : AppCompatActivity(), ItemClickListener {
+
+    private lateinit var binding: ActivityMainBinding
+
+    private val movieListAdapter = MoviesListAdapter(this)
+
+    private lateinit var viewModel: MoviesViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        viewModel = (application as PersistentApplication).viewModel
+
+        initRecycler()
+
+        viewModel.movies.observe(this) {
+
+            Log.e(TAG, "onCreate: OBSERVER CALL", )
+
+            updateAdapter(it)
+        }
+
+    }
+    private fun initRecycler() {
+        binding.movieListRecycler.apply {
+            layoutManager = GridLayoutManager(this.context,2)
+            adapter = movieListAdapter
+            addItemDecoration(
+                MoviesListRecyclerDecorator(resources.getInteger(
+                R.integer.recycler_item_offset))
+            )
+        }
+    }
+
+
+
+    private fun updateAdapter(moviesList: List<MoviesListItem>) {
+
+        movieListAdapter.moviesList = moviesList.sortedByDescending { it.averageRating }
+    }
+
+
+    override fun onItemClicked(movie: MoviesListItem) {
+        val intent = Intent(this, MovieDetailsActivity::class.java).apply {
+
+            putExtra(Constants.INTENT_MOVIE_ID_KEY, movie.id)
+            //putExtra(Constants.INTENT_MEDIA_TYPE_KEY, movie.mediaType)
+        }
+        startActivityForResult(intent, 1)
+    }
+}
