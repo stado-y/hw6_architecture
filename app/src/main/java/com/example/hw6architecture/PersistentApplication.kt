@@ -2,18 +2,21 @@ package com.example.hw6architecture
 
 import android.app.Application
 import android.widget.Toast
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.hw6architecture.data.ImdbRepository
+import com.example.hw6architecture.data.local.MoviesRoom
 
 class PersistentApplication : Application() {
 
 
-    val viewModel = ViewModelProvider.AndroidViewModelFactory(this).create(MoviesViewModel::class.java)
+    lateinit var viewModel: MoviesViewModel
+
+    lateinit var room: MoviesRoom
 
 
-    init {
+    override fun onCreate() {
+        super.onCreate()
 
+        viewModel = ViewModelProvider.AndroidViewModelFactory(this).create(MoviesViewModel::class.java)
 
     }
 
@@ -23,5 +26,6 @@ class PersistentApplication : Application() {
 
             Toast.makeText((this as Application).applicationContext, message, length).show()
         }
+
     }
 }

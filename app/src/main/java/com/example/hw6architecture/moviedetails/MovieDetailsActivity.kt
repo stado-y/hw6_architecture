@@ -118,14 +118,15 @@ class MovieDetailsActivity : AppCompatActivity() {
     }
 
     private fun updateAdapter(actors: List<MovieActor>) {
-
-        val actors = actors.apply {
-            sortedByDescending { it.popularity }
-            if (count() > 10) {
-                dropLast(count() - 10)
+        if (actors != null) {
+            actors.apply {
+                sortedByDescending { it.popularity }
+                if (count() > 10) {
+                    dropLast(count() - 10)
+                }
             }
+            actorsAdapter.actorsList = actors
         }
-        actorsAdapter.actorsList = actors
     }
 
 

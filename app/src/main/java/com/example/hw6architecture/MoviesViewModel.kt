@@ -15,7 +15,7 @@ class MoviesViewModel(application: Application) : AndroidViewModel(application) 
 
     private val job: CompletableJob = Job()
 
-    private val repository = ImdbRepository()
+    private val repository = ImdbRepository(application)
 
 //    val movies: MutableLiveData<List<MoviesListItem>> by lazy {
 //

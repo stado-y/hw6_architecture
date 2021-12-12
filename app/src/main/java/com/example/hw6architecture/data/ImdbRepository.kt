@@ -1,38 +1,56 @@
 package com.example.hw6architecture.data
 
+import android.app.Application
 import android.content.ContentValues
+import android.content.ContentValues.TAG
+import android.content.Context.CONNECTIVITY_SERVICE
+import android.content.SharedPreferences
+import android.net.ConnectivityManager
 import android.util.Log
-import android.util.TimeUtils
-import android.widget.TimePicker
 import android.widget.Toast
-import com.example.hw6architecture.PersistentApplication
+import com.example.hw6architecture.data.local.MovieCreditsDao
+import com.example.hw6architecture.data.local.MoviesListDao
+import com.example.hw6architecture.data.local.MoviesRoom
 import com.example.hw6architecture.data.network.*
 import com.example.hw6architecture.immutable_values.Constants
-import com.google.android.material.timepicker.TimeFormat
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.Flow
 import java.util.concurrent.TimeUnit
 
-class ImdbRepository {
+class ImdbRepository(private val application: Application) {
 
     private val imdbApi = NetworkBuilder.retrofitInit()
 
-    private val saveTime = 0
+    private val room = MoviesRoom.getDatabase(application.applicationContext)
 
-    private val dataIsOutdated = (
-        (saveTime + TimeUnit.HOURS.toMillis(6))
-                < System.currentTimeMillis()
-    )
+    private val moviesListDao: MoviesListDao = room.moviesListDao()
+    private val movieCreditsDao: MovieCreditsDao = room.MovieCreditsDao()
+
+    private val saveTime: Long = getTimeOfSave()
+
+
+
 
     suspend fun getMovieList(): List<MoviesListItem> {
 
         var response: List<MoviesListItem> = emptyList()
-        if (dataIsOutdated) {
+        if (dataIsOutdated && isInternetConnected) {
 
             response = fetchMoviesList()
+            moviesListDao.insertMovieList(response)
+            saveCurrentTime()
         } else {
+            response = moviesListDao.getMovieList()
+            if (response.count() == 0 && !dataIsOutdated) {
 
-            PersistentApplication.makeToast("GET CACHE", Toast.LENGTH_LONG)
+                dataIsOutdated = true
+                return getMovieList()
+            }
+            Log.e(TAG, "getMovieList: CACHED SIZE : ${response.count()}", )
+            withContext(Dispatchers.Main) {
+
+                makeToast("GET CACHE")
+            }
+
         }
         return response
     }
@@ -45,11 +63,11 @@ class ImdbRepository {
                     Constants.MOVIES_LIST_TIME_WINDOW
                 ).results
                 withContext(Dispatchers.Main) {
-                    Log.e(ContentValues.TAG, "fetchMoviesList: ${ moviesList.size }", )
+                    Log.e(TAG, "fetchMoviesList: ${ moviesList.size }", )
                 }
             } catch(e: retrofit2.HttpException) {
                 withContext(Dispatchers.Main) {
-                    PersistentApplication.makeToast(e.toString(), Toast.LENGTH_LONG)
+                    makeToast(e.toString())
 
                 }
             }
@@ -60,12 +78,23 @@ class ImdbRepository {
 
         var response: List<MovieActor> = emptyList()
 
-        if (dataIsOutdated) {
+        if (dataIsOutdated && isInternetConnected) {
 
-            response = fetchMovieCast(mediaType, movieId)
+            val moviecast = fetchMovieCast(mediaType, movieId)
+            if (moviecast != null) {
+                movieCreditsDao.insertMovieCredits(moviecast)
+
+                Log.e(TAG, "getMovieCast: insert MOVIECREDITS: ${moviecast.movieId}", )
+            }
+            moviecast?.let { response = it.cast }
+
         } else {
+            response = movieCreditsDao.getActorsList(movieId)
+            withContext(Dispatchers.Main) {
 
-            PersistentApplication.makeToast("GET CACHE", Toast.LENGTH_LONG)
+                makeToast("GET CACHE")
+            }
+
         }
 
         return response
@@ -75,23 +104,76 @@ class ImdbRepository {
     private suspend fun fetchMovieCast(
         mediaType: String,
         movieId: Int
-    ): List<MovieActor> {
+    ): MovieCreditsResponse? {
 
-        var result: List<MovieActor> = emptyList()
+        var result: MovieCreditsResponse? = null
 
         try {
 
-            result = imdbApi.getMovieCredits(mediaType, movieId).cast
+            result = imdbApi.getMovieCredits(mediaType, movieId)
 
 
         }
         catch(e: retrofit2.HttpException) {
 
             withContext(Dispatchers.Main) {
-                PersistentApplication.makeToast(e.toString(), Toast.LENGTH_LONG)
+                makeToast(e.toString())
             }
         }
 
         return result
+    }
+
+
+
+
+    fun getPreferences (): SharedPreferences {
+
+        return application
+            .applicationContext
+            .getSharedPreferences(
+                APPLICATION_PREFS,
+                Application.MODE_PRIVATE,
+            )
+    }
+
+    fun saveCurrentTime() {
+
+        val editor = getPreferences().edit()
+        editor.putLong(DATABASE_SAVE_TIME, System.currentTimeMillis())
+        editor.apply()
+    }
+
+    fun getTimeOfSave(): Long {
+
+        return getPreferences().getLong(DATABASE_SAVE_TIME, 0L)
+    }
+
+    private var dataIsOutdated = (
+            (saveTime + TimeUnit.HOURS.toMillis(6))
+                    < System.currentTimeMillis()
+            )
+
+
+    private val isInternetConnected: Boolean
+        get() {
+            return (application.applicationContext.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager)
+                .activeNetworkInfo?.isConnected == true
+        }
+
+    private fun makeToast(text: String) {
+
+        Toast.makeText(
+            application.applicationContext,
+            text,
+            Toast.LENGTH_LONG
+        ).show()
+    }
+
+    companion object {
+
+        const val APPLICATION_PREFS = "hw6_preferences"
+
+        const val DATABASE_SAVE_TIME = "database_save_time"
     }
 }
