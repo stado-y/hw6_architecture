@@ -1,25 +1,18 @@
 package com.example.hw6architecture.movielist
 
-import android.app.Application
 import android.content.ContentValues.TAG
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.hw6architecture.MoviesViewModel
 import com.example.hw6architecture.PersistentApplication
 import com.example.hw6architecture.R
-import com.example.hw6architecture.data.network.ImdbApiClient
 import com.example.hw6architecture.data.network.MoviesListItem
-import com.example.hw6architecture.data.network.MoviesListResponse
-import com.example.hw6architecture.data.network.NetworkBuilder
 import com.example.hw6architecture.databinding.ActivityMainBinding
 import com.example.hw6architecture.immutable_values.Constants
 import com.example.hw6architecture.moviedetails.MovieDetailsActivity
-import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity(), ItemClickListener {
 
@@ -62,7 +55,7 @@ class MainActivity : AppCompatActivity(), ItemClickListener {
 
     private fun updateAdapter(moviesList: List<MoviesListItem>) {
 
-        movieListAdapter.moviesList = moviesList.sortedByDescending { it.averageRating }
+        movieListAdapter.moviesList = moviesList?.sortedByDescending { it.averageRating }
     }
 
 
