@@ -30,7 +30,7 @@ class ImdbRepository(private val application: Application) {
 
 
 
-    suspend fun getMovieList(): List<MoviesListItem> {
+    suspend fun getMovieList(): List<MoviesListItem> = withContext(Dispatchers.IO) {
 
         var response: List<MoviesListItem> = emptyList()
         if (dataIsOutdated && isInternetConnected) {
@@ -43,7 +43,7 @@ class ImdbRepository(private val application: Application) {
             if (response.count() == 0 && !dataIsOutdated) {
 
                 dataIsOutdated = true
-                return getMovieList()
+                return@withContext getMovieList()
             }
             Log.e(TAG, "getMovieList: CACHED SIZE : ${response.count()}", )
             withContext(Dispatchers.Main) {
@@ -52,7 +52,7 @@ class ImdbRepository(private val application: Application) {
             }
 
         }
-        return response
+        return@withContext response
     }
 
     private suspend fun fetchMoviesList(): List<MoviesListItem> {
@@ -74,7 +74,8 @@ class ImdbRepository(private val application: Application) {
         return moviesList
     }
 
-    suspend fun getMovieCast(mediaType: String,  movieId: Int): List<MovieActor> {
+    suspend fun getMovieCast(mediaType: String?,  movieId: Int): List<MovieActor> {
+        mediaType ?: return emptyList()
 
         var response: List<MovieActor> = emptyList()
 

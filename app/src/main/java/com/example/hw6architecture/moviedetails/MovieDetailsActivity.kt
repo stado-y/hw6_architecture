@@ -52,7 +52,7 @@ class MovieDetailsActivity : AppCompatActivity() {
             currentMovie = findMovie
         }
         else {
-            PersistentApplication.makeToast("can't find movie", Toast.LENGTH_LONG)
+//            PersistentApplication.makeToast("can't find movie", Toast.LENGTH_LONG)
 
             val intent = Intent()
             setResult(Activity.RESULT_CANCELED)
