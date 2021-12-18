@@ -1,31 +1,37 @@
 package com.example.hw6architecture.data.network
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import com.example.hw6architecture.data.network.MovieCreditsResponse.Companion.TABLE_NAME
+import com.example.hw6architecture.moviedetails.Actor
 import com.google.gson.annotations.SerializedName
 
 
-
-@Entity(tableName = TABLE_NAME)
 data class MovieCreditsResponse(
 
     @SerializedName("id")
-    @PrimaryKey
     val movieId: Int,
 
     @SerializedName("cast")
-    val cast: List<MovieActor>,
+    val cast: List<MovieCreditsActor>,
 ) {
-
-    companion object {
-
-        const val TABLE_NAME = "credits_table"
+    fun transformToListOfActors(): List<Actor> {
+        val actors: ArrayList<Actor> = arrayListOf()
+        cast.forEach {
+            actors.add(
+                Actor(
+                    movieId = movieId,
+                    name = it.name,
+                    photoURI = it.photoURI,
+                    character = it.character,
+                    popularity = it.popularity,
+                    order = it.order,
+                )
+            )
+        }
+        actors.sortBy { it.order }
+        return actors.toList()
     }
 }
 
-
-data class MovieActor(
+data class MovieCreditsActor(
 
     @SerializedName("name")
     val name: String,

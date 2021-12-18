@@ -1,8 +1,7 @@
 package com.example.hw6architecture.data.network
 
-import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.hw6architecture.data.network.MoviesListItem.Companion.TABLE_NAME
+import com.example.hw6architecture.movielist.Movie
 import com.google.gson.annotations.SerializedName
 
 data class MoviesListResponse(
@@ -10,9 +9,29 @@ data class MoviesListResponse(
     val results: List<MoviesListItem>,
     val total_pages: Int,
     val total_results: Int,
-)
+) {
+    fun transformToListOfMovies(): List<Movie> {
+        val movies: MutableList<Movie> = mutableListOf()
+        results.forEach {
+            movies.add(
+                Movie(
+                    page = page,
+                    id = it.id,
+                    title = it.title,
+                    name = it.name,
+                    overview = it.overview,
+                    imageURi = it.imageURi,
+                    backgroundURi = it.backgroundURi,
+                    averageRating = it.averageRating,
+                    popularity = it.popularity,
+                    mediaType = it.mediaType,
+                )
+            )
+        }
+        return movies.toList()
+    }
+}
 
-@Entity(tableName = TABLE_NAME)
 data class MoviesListItem(
 
     @SerializedName("id")
@@ -42,10 +61,4 @@ data class MoviesListItem(
 
     @SerializedName("media_type")
     val mediaType: String,
-) {
-
-    companion object {
-
-        const val TABLE_NAME = "movies_table"
-    }
-}
+)

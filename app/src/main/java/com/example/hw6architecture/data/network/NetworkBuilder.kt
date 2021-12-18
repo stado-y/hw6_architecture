@@ -19,7 +19,6 @@ object NetworkBuilder {
             .addInterceptor(httpLoggingInterceptor)
             .build()
 
-
         val retrofit = Retrofit.Builder()
             .baseUrl(Constants.API_BASE_URL)
             .client(okHttpClient)

@@ -36,5 +36,4 @@ object ImageSizes {
         MEDIUM("w185"),
         LARGE("w300"),
     }
-
 }

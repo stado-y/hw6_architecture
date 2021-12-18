@@ -15,11 +15,9 @@ object Constants {
 
     const val INTENT_MEDIA_TYPE_KEY = "mediaType"
 
-
     const val TEST = "test"
     const val REAL = "real"
     const val TYPE_OF_BUILD = REAL
-
 
     const val MAX_OVERVIEW_LENGTH = 55
 

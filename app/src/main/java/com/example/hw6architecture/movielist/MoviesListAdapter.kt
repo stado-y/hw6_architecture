@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.hw6architecture.data.network.GlideModuleImplementation.Companion.fillImageViewFromURI
-import com.example.hw6architecture.data.network.MoviesListItem
 import com.example.hw6architecture.databinding.MoviesListItemLayoutBinding
 import com.example.hw6architecture.immutable_values.Constants
 import com.example.hw6architecture.immutable_values.ImageSizes
@@ -19,36 +18,30 @@ import kotlinx.coroutines.launch
 
 interface ItemClickListener {
 
-    fun onItemClicked(movie: MoviesListItem)
+    fun onItemClicked(movie: Movie)
 }
 
 class MoviesListAdapter(
-    val mItemClickListener: ItemClickListener
+    val itemClickListener: ItemClickListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    var moviesList = emptyList<MoviesListItem>()
+    var moviesList = emptyList<Movie>()
         set(value) {
 
-            value.map { Log.e(TAG, "${ it.name }: ", ) }
+            value.map { Log.e(TAG, "${it.name}: ") }
             field = value
             notifyDataSetChanged()
         }
 
-
     inner class MoviesListViewHolder(
         private val binding: MoviesListItemLayoutBinding
-        ): RecyclerView.ViewHolder(binding.root) {
+    ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: MoviesListItem) {
-
-            with (binding) {
-
-                setInterfaceListener(
-                    item,
-                    movieListItemDescription,
-                    movieListItemTitle,
-                    movieListItemImage,
-                )
+        fun bind(item: Movie) {
+            with(binding) {
+                root.setOnClickListener {
+                    itemClickListener.onItemClicked(item)
+                }
 
                 fillImageViewFromURI(
                     movieListItemImage,
@@ -60,20 +53,13 @@ class MoviesListAdapter(
                 movieListItemDescription.text = cropText(item.overview)
 
                 val rating = (item.averageRating * 10).toInt()
-                CoroutineScope(Dispatchers.Main).launch { progressBarIndicator.setProgressCompat(rating, true) }
-                RatingTextView.text = Constants.RATING_FORMAT_TEMPLATE.format(rating)
-            }
-
-
-
-        }
-
-        private fun setInterfaceListener(item: MoviesListItem, vararg views: View) {
-
-            views.map {
-                it.setOnClickListener {
-                    mItemClickListener.onItemClicked(item)
+                CoroutineScope(Dispatchers.Main).launch {
+                    progressBarIndicator.setProgressCompat(
+                        rating,
+                        true
+                    )
                 }
+                RatingTextView.text = Constants.RATING_FORMAT_TEMPLATE.format(rating)
             }
         }
 
@@ -89,11 +75,9 @@ class MoviesListAdapter(
                 text
             }
         }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-
         val view = MoviesListItemLayoutBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
@@ -103,12 +87,10 @@ class MoviesListAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
         if (holder is MoviesListViewHolder) {
             holder.bind(moviesList[position])
         }
     }
 
     override fun getItemCount() = moviesList.size
-
 }

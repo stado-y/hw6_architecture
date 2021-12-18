@@ -1,59 +1,52 @@
 package com.example.hw6architecture
 
 import android.app.Application
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.hw6architecture.data.ImdbRepository
-import com.example.hw6architecture.data.network.MovieActor
-import com.example.hw6architecture.data.network.MoviesListItem
+import com.example.hw6architecture.moviedetails.Actor
+import com.example.hw6architecture.movielist.Movie
+import com.example.hw6architecture.utils.ToastMaker
 import kotlinx.coroutines.*
 
 class MoviesViewModel(application: Application) : AndroidViewModel(application) {
 
     private val job: CompletableJob = Job()
 
-    private val repository = ImdbRepository(application)
 
-//    val movies: MutableLiveData<List<MoviesListItem>> by lazy {
-//
-//        MutableLiveData<List<MoviesListItem>>()
-//    }
+    private val repository = ImdbRepository.instance
 
-    val _movies = MutableLiveData<List<MoviesListItem>>()
-    var movies: LiveData<List<MoviesListItem>> = _movies
+
+    private val _movies = MutableLiveData<List<Movie>>()
+    var movies: LiveData<List<Movie>> = _movies
 
     init {
+
         viewModelScope.launch(Dispatchers.IO + job) {
-
-            val movieslist = repository.getMovieList()
-
+            val movielist = repository.getMovieList()
             withContext(Dispatchers.Main) {
-                _movies.value = movieslist
+                _movies.value = movielist
             }
-
         }
-
     }
 
-
-    suspend fun getActors(movieId: Int): List<MovieActor> {
+    suspend fun getActors(movieId: Int): List<Actor> {
 
         val mediaType = getMovieFromId(movieId)?.mediaType
 
         return if (mediaType != null) {
 
-            repository.getMovieCast(mediaType, movieId)
+            repository.getListOfActors(mediaType, movieId)
         }
         else {
-            PersistentApplication.makeToast("Can't find movie type", Toast.LENGTH_LONG)
+            ToastMaker.instance.showToast("Can't find movie type")
             emptyList()
         }
     }
 
-    fun getMovieFromId(movieId: Int): MoviesListItem? {
+    fun getMovieFromId(movieId: Int): Movie? {
 
         return movies.value?.find { it.id == movieId }
     }

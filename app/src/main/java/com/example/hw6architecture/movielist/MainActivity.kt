@@ -7,9 +7,8 @@ import android.os.Bundle
 import android.util.Log
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.hw6architecture.MoviesViewModel
-import com.example.hw6architecture.PersistentApplication
+import com.example.hw6architecture.Hw6Architecture
 import com.example.hw6architecture.R
-import com.example.hw6architecture.data.network.MoviesListItem
 import com.example.hw6architecture.databinding.ActivityMainBinding
 import com.example.hw6architecture.immutable_values.Constants
 import com.example.hw6architecture.moviedetails.MovieDetailsActivity
@@ -28,7 +27,7 @@ class MainActivity : AppCompatActivity(), ItemClickListener {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = (application as PersistentApplication).viewModel
+        viewModel = (application as Hw6Architecture).viewModel
 
         initRecycler()
 
@@ -53,13 +52,13 @@ class MainActivity : AppCompatActivity(), ItemClickListener {
 
 
 
-    private fun updateAdapter(moviesList: List<MoviesListItem>) {
+    private fun updateAdapter(moviesList: List<Movie>) {
 
         movieListAdapter.moviesList = moviesList?.sortedByDescending { it.averageRating }
     }
 
 
-    override fun onItemClicked(movie: MoviesListItem) {
+    override fun onItemClicked(movie: Movie) {
         val intent = Intent(this, MovieDetailsActivity::class.java).apply {
 
             putExtra(Constants.INTENT_MOVIE_ID_KEY, movie.id)

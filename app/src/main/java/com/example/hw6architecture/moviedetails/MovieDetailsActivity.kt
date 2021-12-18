@@ -9,14 +9,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.hw6architecture.MoviesViewModel
-import com.example.hw6architecture.PersistentApplication
+import com.example.hw6architecture.Hw6Architecture
 import com.example.hw6architecture.R
 import com.example.hw6architecture.data.network.GlideModuleImplementation.Companion.fillImageViewFromURI
-import com.example.hw6architecture.data.network.MovieActor
-import com.example.hw6architecture.data.network.MoviesListItem
 import com.example.hw6architecture.databinding.ActivityMovieDetailsBinding
 import com.example.hw6architecture.immutable_values.Constants
 import com.example.hw6architecture.immutable_values.ImageSizes
+import com.example.hw6architecture.movielist.Movie
+import com.example.hw6architecture.utils.ToastMaker
 import kotlinx.coroutines.*
 import kotlin.properties.Delegates
 
@@ -31,7 +31,7 @@ class MovieDetailsActivity : AppCompatActivity() {
 
     private var currentMovieId by Delegates.notNull<Int>()
 
-    private lateinit var currentMovie: MoviesListItem
+    private lateinit var currentMovie: Movie
 
     private val job: CompletableJob = Job()
 
@@ -41,7 +41,7 @@ class MovieDetailsActivity : AppCompatActivity() {
         binding = ActivityMovieDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = (application as PersistentApplication).viewModel
+        viewModel = (application as Hw6Architecture).viewModel
 
         currentMovieId = getIntentMovieId()
 
@@ -52,17 +52,14 @@ class MovieDetailsActivity : AppCompatActivity() {
             currentMovie = findMovie
         }
         else {
-            PersistentApplication.makeToast("can't find movie", Toast.LENGTH_LONG)
+            ToastMaker.instance.showToast("can't find movie")
 
             val intent = Intent()
             setResult(Activity.RESULT_CANCELED)
             finish()
         }
-
         initRecycler()
-
         fillViews()
-
         fillAdapter(currentMovieId)
 
     }
@@ -87,14 +84,13 @@ class MovieDetailsActivity : AppCompatActivity() {
         }
     }
 
-    fun fillAdapter(movieId: Int) {
+    private fun fillAdapter(movieId: Int) {
 
         CoroutineScope(Dispatchers.IO + job).launch {
 
            val actors = viewModel.getActors(movieId)
 
             withContext(Dispatchers.Main) {
-
                 updateAdapter(actors)
                 setProgressBar()
             }
@@ -106,18 +102,16 @@ class MovieDetailsActivity : AppCompatActivity() {
         super.onStop()
         Glide.with(this).clear(binding.backgroundImageView)
         Glide.with(this).clear(binding.movieImageView)
-
         if (job.isActive) { job.cancel() }
     }
 
     fun setProgressBar() {
-
         binding.progressBarForMovie.setProgressCompat(
             (currentMovie.averageRating * 10).toInt(),
             true)
     }
 
-    private fun updateAdapter(actors: List<MovieActor>) {
+    private fun updateAdapter(actors: List<Actor>) {
         if (actors != null) {
             actors.apply {
                 sortedByDescending { it.popularity }
@@ -129,10 +123,7 @@ class MovieDetailsActivity : AppCompatActivity() {
         }
     }
 
-
     private fun fillViews() {
-
-
 
         with (binding) {
 
