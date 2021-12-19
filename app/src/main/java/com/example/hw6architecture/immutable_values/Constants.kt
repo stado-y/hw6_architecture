@@ -11,16 +11,6 @@ object Constants {
     const val MOVIES_MEDIA_TYPE = "all"
     const val  MOVIES_LIST_TIME_WINDOW = "week"
 
-    const val INTENT_MOVIE_ID_KEY = "movieId"
-
-    const val INTENT_MEDIA_TYPE_KEY = "mediaType"
-
-    const val TEST = "test"
-    const val REAL = "real"
-    const val TYPE_OF_BUILD = REAL
-
-    const val MAX_OVERVIEW_LENGTH = 55
-
     const val RATING_FORMAT_TEMPLATE = "%3d%%"
 
 }

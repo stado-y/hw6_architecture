@@ -3,7 +3,6 @@ package com.example.hw6architecture.movielist
 import android.content.ContentValues.TAG
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.hw6architecture.data.network.GlideModuleImplementation.Companion.fillImageViewFromURI
@@ -12,7 +11,6 @@ import com.example.hw6architecture.immutable_values.Constants
 import com.example.hw6architecture.immutable_values.ImageSizes
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 
@@ -27,7 +25,6 @@ class MoviesListAdapter(
 
     var moviesList = emptyList<Movie>()
         set(value) {
-
             value.map { Log.e(TAG, "${it.name}: ") }
             field = value
             notifyDataSetChanged()
@@ -50,29 +47,16 @@ class MoviesListAdapter(
                 )
 
                 movieListItemTitle.text = item.title ?: item.name
-                movieListItemDescription.text = cropText(item.overview)
+                movieListItemDescription.text = item.overview//cropText(item.overview)
 
                 val rating = (item.averageRating * 10).toInt()
-                CoroutineScope(Dispatchers.Main).launch {
+                progressBarIndicator.post {
                     progressBarIndicator.setProgressCompat(
                         rating,
                         true
                     )
                 }
                 RatingTextView.text = Constants.RATING_FORMAT_TEMPLATE.format(rating)
-            }
-        }
-
-        private fun cropText(text: String): String {
-
-            return if (text.count() > Constants.MAX_OVERVIEW_LENGTH) {
-
-                text.dropLast(text.count() - Constants.MAX_OVERVIEW_LENGTH)
-                    .dropLastWhile { !it.isWhitespace() }
-                    .plus("...")
-            }
-            else {
-                text
             }
         }
     }

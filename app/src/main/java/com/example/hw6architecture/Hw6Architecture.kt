@@ -9,16 +9,10 @@ import com.example.hw6architecture.utils.ToastMaker
 
 class Hw6Architecture : Application() {
 
-
-    lateinit var viewModel: MoviesViewModel
-
     override fun onCreate() {
         super.onCreate()
 
         ImdbRepository.create(this)
-
-        viewModel =
-            ViewModelProvider.AndroidViewModelFactory(this).create(MoviesViewModel::class.java)
 
         ToastMaker.setup(this)
     }

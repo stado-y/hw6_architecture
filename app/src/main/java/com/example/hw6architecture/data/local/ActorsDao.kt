@@ -1,7 +1,5 @@
 package com.example.hw6architecture.data.local
 
-import android.content.ContentValues.TAG
-import android.util.Log
 import androidx.room.*
 import com.example.hw6architecture.moviedetails.Actor
 import kotlinx.coroutines.Dispatchers

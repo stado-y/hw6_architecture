@@ -122,7 +122,7 @@ class ImdbRepository(private val application: Application) {
         actorsDao.insertActorsList(actorsList)
     }
 
-    fun getPreferences(): SharedPreferences {
+    private fun getPreferences(): SharedPreferences {
         return application
             .applicationContext
             .getSharedPreferences(
@@ -131,18 +131,24 @@ class ImdbRepository(private val application: Application) {
             )
     }
 
-    fun saveCurrentTime() {
+    private fun saveCurrentTime() {
         val editor = getPreferences().edit()
         editor.putLong(DATABASE_SAVE_TIME, System.currentTimeMillis())
         editor.apply()
     }
 
-    fun getTimeOfSave(): Long {
+    private fun getTimeOfSave(): Long {
         return getPreferences().getLong(DATABASE_SAVE_TIME, 0L)
     }
 
     private fun makeToast(text: String) {
         ToastMaker.instance.showToast(text)
+    }
+
+    suspend fun getMovieFromDataBase(movieId: Int): Movie {
+        return withContext(Dispatchers.IO) {
+             moviesDao.getMovie(movieId)
+        }
     }
 
     companion object {

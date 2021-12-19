@@ -21,4 +21,7 @@ interface MoviesDao {
             }
         }
     }
+
+    @Query("SELECT * FROM ${Movie.TABLE_NAME} WHERE id = :movieId")
+    fun getMovie(movieId: Int): Movie
 }

@@ -14,10 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Hw6Architecture">
         <activity
-            android:name=".moviedetails.MovieDetailsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".movielist.MainActivity"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
