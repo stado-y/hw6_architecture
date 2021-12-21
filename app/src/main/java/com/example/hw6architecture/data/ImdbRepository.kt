@@ -6,7 +6,6 @@ import android.content.Context.CONNECTIVITY_SERVICE
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.util.Log
-import com.example.hw6architecture.Hw6Architecture
 import com.example.hw6architecture.data.local.ActorsDao
 import com.example.hw6architecture.data.local.MoviesDao
 import com.example.hw6architecture.data.local.MoviesRoom
@@ -80,15 +79,16 @@ class ImdbRepository(private val application: Application) {
     }
 
     suspend fun getListOfActors(mediaType: String, movieId: Int): List<Actor> {
-        val actors: List<Actor>? = actorsDao.getActorsList(movieId)
-        Log.e(TAG, "getListOfActors: ACTORS : ${actors}", )
-        return if (actors.isNullOrEmpty()) {
-            Log.e(TAG, "getListOfActors: ACTORS IS NULL OR EMPTY", )
-            fetchMovieCast(mediaType, movieId) ?: listOf<Actor>()
-        }
-        else {
-            actors
-        }
+//        val actors: List<Actor>? = actorsDao.getActorsList(movieId)
+//        Log.e(TAG, "getListOfActors: ACTORS : ${actors}", )
+//        return if (actors.isNullOrEmpty()) {
+//            Log.e(TAG, "getListOfActors: ACTORS IS NULL OR EMPTY", )
+//            fetchMovieCast(mediaType, movieId) ?: listOf<Actor>()
+//        }
+//        else {
+//            actors
+//        }
+        return fetchMovieCast(mediaType, movieId) ?: actorsDao.getActorsList(movieId)
     }
 
     private suspend fun fetchMovieCast(
@@ -163,6 +163,5 @@ class ImdbRepository(private val application: Application) {
         fun create(application: Application) {
             instance = ImdbRepository(application)
         }
-
     }
 }
