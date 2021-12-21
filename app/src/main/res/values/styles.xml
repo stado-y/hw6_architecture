@@ -31,6 +31,8 @@
         <item name="android:layout_height">@dimen/recycler_overview_text_height</item>
         <item name="autoSizeTextType">uniform</item>
         <item name="android:lines">@integer/recycler_max_text_lines</item>
+        <item name="maxLines">@integer/recycler_max_text_lines</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
     <style name="text_style.header.movie_rating">

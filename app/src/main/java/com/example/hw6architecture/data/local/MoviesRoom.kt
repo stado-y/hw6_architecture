@@ -4,22 +4,18 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
-import com.example.hw6architecture.data.network.MovieCreditsResponse
-import com.example.hw6architecture.data.network.MoviesListItem
+import com.example.hw6architecture.moviedetails.Actor
+import com.example.hw6architecture.movielist.Movie
 
 
 @Database(
-    entities = [MoviesListItem::class, MovieCreditsResponse::class],
+    entities = [Movie::class, Actor::class],
     version = 1
 )
-@TypeConverters(DataConverters::class)
 abstract class MoviesRoom : RoomDatabase() {
 
-    abstract fun moviesListDao(): MoviesListDao
-    abstract fun MovieCreditsDao(): MovieCreditsDao
-
-
+    abstract fun moviesDao(): MoviesDao
+    abstract fun actorsDao(): ActorsDao
 
     companion object {
 

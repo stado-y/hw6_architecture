@@ -8,15 +8,14 @@ import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.module.AppGlideModule
 import com.bumptech.glide.request.RequestOptions
+import com.example.hw6architecture.BuildConfig
 import com.example.hw6architecture.R
-import com.example.hw6architecture.immutable_values.Constants
 
 @GlideModule
 class GlideModuleImplementation : AppGlideModule() {
 
     override fun applyOptions(context: Context, builder: GlideBuilder) {
         super.applyOptions(context, builder)
-
         builder.apply {
             setDefaultRequestOptions(
                 RequestOptions()
@@ -28,9 +27,8 @@ class GlideModuleImplementation : AppGlideModule() {
     companion object {
 
         fun fillImageViewFromURI(view: ImageView, uri: String?, size: String) {
-
             GlideApp.with(view)
-                .load("${ Constants.IMAGE_BASE_URL }${size}/${ uri }")
+                .load("${ BuildConfig.IMAGE_BASE_URL }${size}${ uri }")
                 .placeholder(R.drawable.ic_image_placeholder)
                 .dontAnimate()
                 .dontTransform()

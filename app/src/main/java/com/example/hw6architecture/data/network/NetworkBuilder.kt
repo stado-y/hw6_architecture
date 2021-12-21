@@ -1,6 +1,6 @@
 package com.example.hw6architecture.data.network
 
-import com.example.hw6architecture.immutable_values.Constants
+import com.example.hw6architecture.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -19,9 +19,8 @@ object NetworkBuilder {
             .addInterceptor(httpLoggingInterceptor)
             .build()
 
-
         val retrofit = Retrofit.Builder()
-            .baseUrl(Constants.API_BASE_URL)
+            .baseUrl(BuildConfig.API_BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
