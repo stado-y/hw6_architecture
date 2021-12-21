@@ -9,7 +9,6 @@ import com.example.hw6architecture.immutable_values.ImageSizes
 
 class ActorsAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-
     var actorsList = emptyList<Actor>()
         set(value) {
             field = value

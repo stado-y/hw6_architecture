@@ -26,14 +26,12 @@ class MovieDetailsViewModel(private val movieId: Int): ViewModel() {
     init {
         viewModelScope.launch(Dispatchers.IO + job) {
             _chosenMovie.postValue(getMovieFromId(movieId))
-
             _actors.postValue(getActors(movieId))
         }
     }
 
     override fun onCleared() {
         super.onCleared()
-
         if (job.isActive) {
             job.complete()
         }
@@ -41,14 +39,11 @@ class MovieDetailsViewModel(private val movieId: Int): ViewModel() {
 
 
     private suspend fun getActors(movieId: Int): List<Actor> {
-
         val mediaType = getMovieFromId(movieId).mediaType
-
         return repository.getListOfActors(mediaType, movieId)
     }
 
     private suspend fun getMovieFromId(movieId: Int): Movie {
-
         return repository.getMovieFromDataBase(movieId)
     }
 }

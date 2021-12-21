@@ -18,7 +18,6 @@ class MainActivity : AppCompatActivity(), ItemClickListener {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         createFragment(binding.MovieListFragmentContainer.id, MovieListFragment())
     }
 

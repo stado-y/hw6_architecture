@@ -11,9 +11,7 @@ class Hw6Architecture : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
         ImdbRepository.create(this)
-
         ToastMaker.setup(this)
     }
 }

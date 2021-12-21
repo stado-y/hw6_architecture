@@ -55,7 +55,6 @@ data class MoviesListItem(
     @SerializedName("vote_average")
     val averageRating: Float,
 
-
     @SerializedName("popularity")
     val popularity: Double,
 

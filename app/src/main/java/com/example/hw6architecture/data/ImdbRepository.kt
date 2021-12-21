@@ -161,7 +161,6 @@ class ImdbRepository(private val application: Application) {
             private set
 
         fun create(application: Application) {
-
             instance = ImdbRepository(application)
         }
 

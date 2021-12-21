@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.hw6architecture.data.ImdbRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class MovieListViewModel: ViewModel() {
 
@@ -17,13 +16,8 @@ class MovieListViewModel: ViewModel() {
     var movies: LiveData<List<Movie>> = _movies
 
     init {
-
         viewModelScope.launch(Dispatchers.IO) {
-            val movielist = repository.getMovieList()
-            _movies.postValue(movielist)
-//            withContext(Dispatchers.Main) {
-//                _movies.value = movielist
-//            }
+            _movies.postValue(repository.getMovieList())
         }
     }
 }

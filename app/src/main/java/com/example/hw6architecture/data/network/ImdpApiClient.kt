@@ -12,7 +12,7 @@ interface ImdbApiClient: Serializable {
         @Path("media_type") mediaType: String,
         @Path("time_window") timeWindow: String,
         @Query("page") page: Int = 1,
-        //@Query("api_key") apiId: String = Constants.API_KEY,
+        //@Query("api_key") apiId: String = BuildConfig.API_KEY,
     ): MoviesListResponse
 
     @GET("{media_type}/{movie_id}/credits")
