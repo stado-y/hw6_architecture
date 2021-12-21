@@ -58,6 +58,6 @@ class MovieListFragment : Fragment() {
     }
 
     private fun updateAdapter(moviesList: List<Movie>) {
-        movieListAdapter.moviesList = moviesList.sortedByDescending { it.averageRating }
+        movieListAdapter.submitList(moviesList.sortedByDescending { it.averageRating })
     }
 }

@@ -105,6 +105,6 @@ class MovieDetailsFragment(private val movieId: Int) : Fragment() {
     }
 
     private fun updateAdapter(actors: List<Actor>) {
-        actorsAdapter.actorsList = actors.sortedBy { it.order }
+        actorsAdapter.submitList(actors.sortedBy { it.order })
     }
 }

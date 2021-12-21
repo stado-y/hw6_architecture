@@ -4,11 +4,14 @@ import android.content.ContentValues.TAG
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.hw6architecture.data.network.GlideModuleImplementation.Companion.fillImageViewFromURI
 import com.example.hw6architecture.databinding.MoviesListItemLayoutBinding
 import com.example.hw6architecture.immutable_values.Constants
 import com.example.hw6architecture.immutable_values.ImageSizes
+import com.example.hw6architecture.moviedetails.Actor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,16 +22,12 @@ interface ItemClickListener {
     fun onItemClicked(movie: Movie)
 }
 
-class MoviesListAdapter(
+class MoviesListAdapter
+    (
     val itemClickListener: ItemClickListener
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+) : ListAdapter<Movie,
+        MoviesListAdapter.MoviesListViewHolder>(MovieListDiffUtil) {
 
-    var moviesList = emptyList<Movie>()
-        set(value) {
-            value.map { Log.e(TAG, "${it.name}: ") }
-            field = value
-            notifyDataSetChanged()
-        }
 
     inner class MoviesListViewHolder(
         private val binding: MoviesListItemLayoutBinding
@@ -61,7 +60,7 @@ class MoviesListAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoviesListViewHolder {
         val view = MoviesListItemLayoutBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
@@ -70,11 +69,20 @@ class MoviesListAdapter(
         return MoviesListViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder is MoviesListViewHolder) {
-            holder.bind(moviesList[position])
-        }
+    override fun onBindViewHolder(holder: MoviesListViewHolder, position: Int) {
+        val current = getItem(position)
+        holder.bind(current)
     }
 
-    override fun getItemCount() = moviesList.size
+    companion object {
+        private val MovieListDiffUtil = object : DiffUtil.ItemCallback<Movie>() {
+            override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
+                return oldItem === newItem
+            }
+
+            override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
+                return oldItem.id == newItem.id
+            }
+        }
+    }
 }

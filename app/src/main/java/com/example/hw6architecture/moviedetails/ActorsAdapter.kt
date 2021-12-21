@@ -2,22 +2,18 @@ package com.example.hw6architecture.moviedetails
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.hw6architecture.data.network.GlideModuleImplementation.Companion.fillImageViewFromURI
 import com.example.hw6architecture.databinding.TopCastLayoutBinding
 import com.example.hw6architecture.immutable_values.ImageSizes
 
-class ActorsAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    var actorsList = emptyList<Actor>()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
-
+class ActorsAdapter : ListAdapter<Actor, ActorsAdapter.ActorsViewHolder>(ActorDifUtil) {
 
     inner class ActorsViewHolder(
-        val binding: TopCastLayoutBinding
+        private val binding: TopCastLayoutBinding
     ): RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Actor) {
@@ -33,7 +29,7 @@ class ActorsAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActorsViewHolder {
 
         val view = TopCastLayoutBinding
             .inflate(LayoutInflater.from(parent.context),
@@ -43,16 +39,21 @@ class ActorsAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         return ActorsViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
-        if (holder is ActorsViewHolder) {
-
-            holder.bind(actorsList[position])
-        }
+    override fun onBindViewHolder(holder: ActorsViewHolder, position: Int) {
+        val current = getItem(position)
+            holder.bind(current)
     }
 
-    override fun getItemCount() = actorsList.count()
+    companion object {
+        private val ActorDifUtil = object : DiffUtil.ItemCallback<Actor>() {
+            override fun areItemsTheSame(oldItem: Actor, newItem: Actor): Boolean {
+                return oldItem === newItem
+            }
 
-
-
+            override fun areContentsTheSame(oldItem: Actor, newItem: Actor): Boolean {
+                return oldItem.name == newItem.name
+                        && oldItem.character == newItem.character
+            }
+        }
+    }
 }
