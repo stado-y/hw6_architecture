@@ -14,7 +14,6 @@ import com.example.hw6architecture.databinding.FragmentMovieDetailsBinding
 import com.example.hw6architecture.immutable_values.Constants
 import com.example.hw6architecture.immutable_values.ImageSizes
 import com.example.hw6architecture.movielist.Movie
-import kotlinx.coroutines.*
 
 class MovieDetailsFragment(private val movieId: Int) : Fragment() {
 
@@ -25,8 +24,6 @@ class MovieDetailsFragment(private val movieId: Int) : Fragment() {
     private val actorsAdapter = ActorsAdapter()
 
     private lateinit var currentMovie: Movie
-
-    private val job: CompletableJob = Job()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,9 +54,6 @@ class MovieDetailsFragment(private val movieId: Int) : Fragment() {
         super.onDetach()
         Glide.with(this).clear(binding.backgroundImageView)
         Glide.with(this).clear(binding.movieImageView)
-        if (job.isActive) {
-            job.cancel()
-        }
     }
 
     private fun initRecycler() {
