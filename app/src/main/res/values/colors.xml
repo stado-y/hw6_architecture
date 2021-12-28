@@ -7,4 +7,16 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="gray">#444A47</color>
+
+    <color name="activity_background">#6675B9</color>
+
+    <color name="primary_text_color">#D5BEBE</color>
+    <color name="primary_text_shadow_color">#6F0000</color>
+
+    <color name="rating_statusbar_color">#00FF40</color>
+
+    <color name="light_blue">#4347AB</color>
+    <color name="blue">#121BD0</color>
 </resources>
