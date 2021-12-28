@@ -8,7 +8,6 @@ import android.net.ConnectivityManager
 import android.util.Log
 import com.example.hw6architecture.data.local.ActorsDao
 import com.example.hw6architecture.data.local.MoviesDao
-import com.example.hw6architecture.data.local.MoviesRoom
 import com.example.hw6architecture.data.network.*
 import com.example.hw6architecture.immutable_values.Constants
 import com.example.hw6architecture.moviedetails.Actor
@@ -17,15 +16,15 @@ import com.example.hw6architecture.utils.ToastMaker
 import kotlinx.coroutines.*
 import java.net.UnknownHostException
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class ImdbRepository(private val application: Application) {
-
-    private val imdbApi = NetworkBuilder.retrofitInit()
-
-    private val room = MoviesRoom.getDatabase(application)
-
-    private val moviesDao: MoviesDao = room.moviesDao()
-    private val actorsDao: ActorsDao = room.actorsDao()
+class ImdbRepository @Inject constructor(
+    private val application: Application,
+    private val imdbApi: ImdbApiClient,
+    private val moviesDao: MoviesDao,
+    private val actorsDao: ActorsDao,
+    private val toastMaker: ToastMaker
+) {
 
     private val saveTime: Long = getTimeOfSave()
 
@@ -142,7 +141,7 @@ class ImdbRepository(private val application: Application) {
     }
 
     private fun makeToast(text: String) {
-        ToastMaker.instance.showToast(text)
+        toastMaker.showToast(text)
     }
 
     suspend fun getMovieFromDataBase(movieId: Int): Movie {
@@ -156,12 +155,5 @@ class ImdbRepository(private val application: Application) {
         const val APPLICATION_PREFS = "hw6_preferences"
 
         const val DATABASE_SAVE_TIME = "database_save_time"
-
-        lateinit var instance: ImdbRepository
-            private set
-
-        fun create(application: Application) {
-            instance = ImdbRepository(application)
-        }
     }
 }

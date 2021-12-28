@@ -16,29 +16,4 @@ abstract class MoviesRoom : RoomDatabase() {
 
     abstract fun moviesDao(): MoviesDao
     abstract fun actorsDao(): ActorsDao
-
-    companion object {
-
-        const val DATABASE_NAME = "movies_database"
-
-        @Volatile
-        private var INSTANCE: MoviesRoom? = null
-
-        fun getDatabase(
-            context: Context,
-        ): MoviesRoom {
-            return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context,
-                    MoviesRoom::class.java,
-                    DATABASE_NAME
-                )
-                    .fallbackToDestructiveMigration()
-                    .build()
-                INSTANCE = instance
-
-                instance
-            }
-        }
-    }
 }
