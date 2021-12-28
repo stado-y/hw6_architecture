@@ -8,7 +8,10 @@ import com.example.hw6architecture.moviedetails.MovieDetailsFragment
 import com.example.hw6architecture.movielist.ItemClickListener
 import com.example.hw6architecture.movielist.Movie
 import com.example.hw6architecture.movielist.MovieListFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity(), ItemClickListener {
 
     private lateinit var binding: ActivityMainBinding
@@ -18,13 +21,16 @@ class MainActivity : AppCompatActivity(), ItemClickListener {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        createFragment(binding.MovieListFragmentContainer.id, MovieListFragment())
+
+        if (savedInstanceState == null) {
+            createFragment(binding.MovieListFragmentContainer.id, MovieListFragment())
+        }
     }
 
     override fun onItemClicked(movie: Movie) {
         createFragment(
             binding.MovieListFragmentContainer.id,
-            MovieDetailsFragment(movie.id),
+            MovieDetailsFragment.newInstance(movie.id),
             true
         )
     }

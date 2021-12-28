@@ -7,18 +7,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.hw6architecture.R
 import com.example.hw6architecture.databinding.FragmentMovieListBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MovieListFragment : Fragment() {
+
+    private val viewModel: MovieListViewModel by viewModels()
 
     private lateinit var binding: FragmentMovieListBinding
 
     private lateinit var movieListAdapter: MoviesListAdapter
-
-    private lateinit var viewModel: MovieListViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,8 +34,6 @@ class MovieListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         movieListAdapter = MoviesListAdapter((activity as ItemClickListener))
-
-        viewModel = MovieListViewModel()
 
         initRecycler()
 
