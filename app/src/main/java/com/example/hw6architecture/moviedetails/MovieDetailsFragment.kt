@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -20,6 +21,8 @@ import kotlin.properties.Delegates
 
 @AndroidEntryPoint
 class MovieDetailsFragment() : Fragment() {
+
+    private val args: MovieDetailsFragmentArgs by navArgs()
 
     //simple class can't be lateinit
     private var movieId by Delegates.notNull<Int>()
@@ -43,7 +46,7 @@ class MovieDetailsFragment() : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        movieId = arguments?.getInt("movieId", 0) ?: 0
+        movieId = args.movieId
 
         viewModel.movieId = movieId
 
@@ -107,8 +110,8 @@ class MovieDetailsFragment() : Fragment() {
         }
     }
 
-    private fun updateAdapter(actors: List<Actor>) {
-        actorsAdapter.submitList(actors.sortedBy { it.order })
+    private fun updateAdapter(actors: List<MovieActorDomain>) {
+        actorsAdapter.submitList(actors.sortedByDescending { it.popularity }.toList())
     }
 
     companion object {

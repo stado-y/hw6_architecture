@@ -3,18 +3,20 @@ package com.example.hw6architecture.movielist
 import android.content.ContentValues
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.hw6architecture.Ext.observeWithLifecycle
 import com.example.hw6architecture.R
+import com.example.hw6architecture.common.BaseMovieListFragment
 import com.example.hw6architecture.databinding.FragmentMovieListBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MovieListFragment : Fragment() {
+class MovieListFragment : BaseMovieListFragment(), ItemClickListener {
 
     private val viewModel: MovieListViewModel by viewModels()
 
@@ -33,14 +35,23 @@ class MovieListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        movieListAdapter = MoviesListAdapter((activity as ItemClickListener))
+        movieListAdapter = MoviesListAdapter(this)
 
         initRecycler()
 
-        viewModel.movies.observe(viewLifecycleOwner) {
+        viewModel.movies.observeWithLifecycle(viewLifecycleOwner) {
             Log.e(ContentValues.TAG, "onCreate: OBSERVER CALL")
             updateAdapter(it)
         }
+
+        binding.floatingFavoriteMoviesButton.setOnClickListener {
+            favoriteButtonClicked()
+        }
+    }
+
+    private fun favoriteButtonClicked() {
+        val action = MovieListFragmentDirections.actionMovieListFragmentToFavoriteMoviesFragment()
+        findNavController().navigate(action)
     }
 
     private fun initRecycler() {
@@ -54,10 +65,20 @@ class MovieListFragment : Fragment() {
                     )
                 )
             )
+            itemAnimator = null
         }
     }
 
     private fun updateAdapter(moviesList: List<Movie>) {
-        movieListAdapter.submitList(moviesList.sortedByDescending { it.averageRating })
+        movieListAdapter.submitList(sorlListOfMovies(moviesList))
+    }
+
+    override fun onItemClicked(movie: Movie) {
+        val action = MovieListFragmentDirections.actionMovieListFragmentToMovieDetailsFragment(movie.id)
+        findNavController().navigate(action)
+    }
+
+    override fun onFavoriteClicked(movie: Movie) {
+        viewModel.updateMovie(swapFavoriteFieldForMovie(movie))
     }
 }
