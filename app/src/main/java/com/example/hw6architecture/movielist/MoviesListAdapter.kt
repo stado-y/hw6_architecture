@@ -7,24 +7,21 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.hw6architecture.R
 import com.example.hw6architecture.data.network.GlideModuleImplementation.Companion.fillImageViewFromURI
 import com.example.hw6architecture.databinding.MoviesListItemLayoutBinding
 import com.example.hw6architecture.immutable_values.Constants
 import com.example.hw6architecture.immutable_values.ImageSizes
-import com.example.hw6architecture.moviedetails.Actor
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+
 
 
 interface ItemClickListener {
-
     fun onItemClicked(movie: Movie)
+    fun onFavoriteClicked(movie: Movie)
 }
 
-class MoviesListAdapter
-    (
-    val itemClickListener: ItemClickListener
+class MoviesListAdapter(
+    val itemClickListener: ItemClickListener,
 ) : ListAdapter<Movie,
         MoviesListAdapter.MoviesListViewHolder>(MovieListDiffUtil) {
 
@@ -46,16 +43,28 @@ class MoviesListAdapter
                 )
 
                 movieListItemTitle.text = item.title ?: item.name
-                movieListItemDescription.text = item.overview//cropText(item.overview)
+                movieListItemDescription.text = item.overview
 
                 val rating = (item.averageRating * 10).toInt()
-                progressBarIndicator.post {
+
+                RatingTextView.text = Constants.RATING_FORMAT_TEMPLATE.format(rating)
+                Log.e(TAG, "bind: ${progressBarIndicator.progress}", )
+                //progressBarIndicator.post {
                     progressBarIndicator.setProgressCompat(
                         rating,
                         true
                     )
+                //}
+
+                if (item.favorite) {
+                    favoriteImageView.setImageResource(R.drawable.ic_image_favorite)
                 }
-                RatingTextView.text = Constants.RATING_FORMAT_TEMPLATE.format(rating)
+                else {
+                    favoriteImageView.setImageResource(R.drawable.ic_image_favorite_border)
+                }
+                favoriteImageView.setOnClickListener {
+                    itemClickListener.onFavoriteClicked(item)
+                }
             }
         }
     }
@@ -77,12 +86,13 @@ class MoviesListAdapter
     companion object {
         private val MovieListDiffUtil = object : DiffUtil.ItemCallback<Movie>() {
             override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
-                return oldItem === newItem
+                return oldItem == newItem
             }
 
             override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
                 return oldItem.id == newItem.id
             }
+
         }
     }
 }
