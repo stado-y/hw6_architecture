@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'androidx.navigation.safeargs.kotlin'
 }
 
 android {
@@ -16,6 +17,12 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation": "$projectDir/shemas".toString()]
+            }
+        }
     }
 
     buildTypes {
@@ -41,6 +48,17 @@ android {
     buildFeatures {
         viewBinding true
     }
+}
+
+sourceSets {
+
+    androidTest {
+        java {
+            srcDirs(files("$projectDir/schemas".toString()))
+        }
+    }
+
+    //androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
 }
 
 dependencies {
@@ -72,16 +90,31 @@ dependencies {
 
 
     // Room components
-    def roomVersion = '2.3.0'
+    def roomVersion = '2.4.1'
     implementation "androidx.room:room-ktx:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
     androidTestImplementation "androidx.room:room-testing:$roomVersion"
 
-    def lifecycleVersion = '2.3.1'
+    def lifecycleVersion = '2.4.0'
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
     implementation 'androidx.fragment:fragment-ktx:1.4.0'
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+
+
+    androidTestImplementation 'androidx.test:runner:1.4.0'
+    androidTestImplementation "androidx.test.ext:junit:1.1.3"
+    androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
+    androidTestImplementation "androidx.room:room-testing:$roomVersion"
+    androidTestImplementation "com.natpryce:hamkrest:1.7.0.0"
+
+
+    def nav_version = "2.3.5"
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
+    implementation "androidx.navigation:navigation-dynamic-features-fragment:$nav_version"
 }
