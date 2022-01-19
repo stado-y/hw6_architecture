@@ -9,8 +9,8 @@ import kotlinx.coroutines.withContext
 @Dao
 interface ActorsDao {
 
-    @Query("SELECT * FROM ${ Actor.TABLE_NAME } where movieId = :movieId")
-    fun getActorsList(movieId: Int): List<Actor>
+//    @Query("SELECT * FROM ${ Actor.TABLE_NAME } where movieId = :movieId")
+//    fun getActorsList(movieId: Int): List<Actor>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertActor(actor: Actor)

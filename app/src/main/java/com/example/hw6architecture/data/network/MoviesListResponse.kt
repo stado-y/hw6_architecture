@@ -25,6 +25,7 @@ data class MoviesListResponse(
                     averageRating = it.averageRating,
                     popularity = it.popularity,
                     mediaType = it.mediaType,
+                    favorite = false,
                 )
             )
         }

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.hw6architecture.common.BaseViewModel
 import com.example.hw6architecture.data.ImdbRepository
 import com.example.hw6architecture.movielist.Movie
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,10 +17,10 @@ import javax.inject.Inject
 @HiltViewModel
 class MovieDetailsViewModel @Inject constructor(
     private val repository: ImdbRepository
-) : ViewModel() {
+) : BaseViewModel() {
 
-    private val _actors = MutableLiveData<List<Actor>>()
-    var actors: LiveData<List<Actor>> = _actors
+    private val _actors = MutableLiveData<List<MovieActorDomain>>()
+    var actors: LiveData<List<MovieActorDomain>> = _actors
 
     private val _chosenMovie = MutableLiveData<Movie>()
     var chosenMovie: LiveData<Movie> = _chosenMovie
@@ -40,13 +41,13 @@ class MovieDetailsViewModel @Inject constructor(
     }
 
     private fun fillLivedata(movieId: Int) {
-        viewModelScope.launch(Dispatchers.IO + job) {
+        execute(request = {
             _chosenMovie.postValue(getMovieFromId(movieId))
             _actors.postValue(getActors(movieId))
-        }
+        } )
     }
 
-    private suspend fun getActors(movieId: Int): List<Actor> {
+    private suspend fun getActors(movieId: Int): List<MovieActorDomain> {
         val mediaType = getMovieFromId(movieId).mediaType
         return repository.getListOfActors(mediaType, movieId)
     }

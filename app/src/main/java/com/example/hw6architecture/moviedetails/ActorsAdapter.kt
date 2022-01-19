@@ -10,16 +10,16 @@ import com.example.hw6architecture.databinding.TopCastLayoutBinding
 import com.example.hw6architecture.immutable_values.ImageSizes
 
 
-class ActorsAdapter : ListAdapter<Actor, ActorsAdapter.ActorsViewHolder>(ActorDifUtil) {
+class ActorsAdapter : ListAdapter<MovieActorDomain, ActorsAdapter.ActorsViewHolder>(ActorDifUtil) {
 
     inner class ActorsViewHolder(
         private val binding: TopCastLayoutBinding
     ): RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Actor) {
+        fun bind(item: MovieActorDomain) {
 
             binding.actorNameTextView.text = item.name
-            binding.actorRolesTextView.text = item.character
+            binding.actorRolesTextView.text = item.role
 
             fillImageViewFromURI(
                 binding.actorPhotoImageView,
@@ -45,14 +45,14 @@ class ActorsAdapter : ListAdapter<Actor, ActorsAdapter.ActorsViewHolder>(ActorDi
     }
 
     companion object {
-        private val ActorDifUtil = object : DiffUtil.ItemCallback<Actor>() {
-            override fun areItemsTheSame(oldItem: Actor, newItem: Actor): Boolean {
+        private val ActorDifUtil = object : DiffUtil.ItemCallback<MovieActorDomain>() {
+            override fun areItemsTheSame(oldItem: MovieActorDomain, newItem: MovieActorDomain): Boolean {
                 return oldItem === newItem
             }
 
-            override fun areContentsTheSame(oldItem: Actor, newItem: Actor): Boolean {
+            override fun areContentsTheSame(oldItem: MovieActorDomain, newItem: MovieActorDomain): Boolean {
                 return oldItem.name == newItem.name
-                        && oldItem.character == newItem.character
+                        //&& oldItem.character == newItem.character
             }
         }
     }
