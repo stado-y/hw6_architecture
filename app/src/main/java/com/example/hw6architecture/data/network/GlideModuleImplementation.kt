@@ -24,11 +24,12 @@ class GlideModuleImplementation : AppGlideModule() {
             )
         }
     }
+
     companion object {
 
         fun fillImageViewFromURI(view: ImageView, uri: String?, size: String) {
             GlideApp.with(view)
-                .load("${ BuildConfig.IMAGE_BASE_URL }${size}${ uri }")
+                .load("${BuildConfig.IMAGE_BASE_URL}${size}${uri}")
                 .placeholder(R.drawable.ic_image_placeholder)
                 .dontAnimate()
                 .dontTransform()

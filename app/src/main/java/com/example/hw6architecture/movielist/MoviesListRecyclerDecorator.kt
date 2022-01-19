@@ -8,7 +8,9 @@ class MoviesListRecyclerDecorator(val itemOffset: Int) : RecyclerView.ItemDecora
     override fun getItemOffsets(outRect: Rect, itemPosition: Int, parent: RecyclerView) {
         super.getItemOffsets(outRect, itemPosition, parent)
 
-        if (itemPosition > 1) { outRect.top = itemOffset }
+        if (itemPosition > 1) {
+            outRect.top = itemOffset
+        }
 
         outRect.right = itemOffset
         outRect.left = itemOffset

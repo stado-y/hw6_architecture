@@ -11,7 +11,6 @@ import com.example.hw6architecture.data.local.MoviesDao
 import com.example.hw6architecture.data.local.MoviesJoinActorsDao
 import com.example.hw6architecture.data.network.*
 import com.example.hw6architecture.immutable_values.Constants
-import com.example.hw6architecture.moviedetails.Actor
 import com.example.hw6architecture.moviedetails.MovieActorDomain
 import com.example.hw6architecture.movielist.Movie
 import com.example.hw6architecture.utils.ToastMaker
@@ -33,9 +32,9 @@ class ImdbRepository @Inject constructor(
     private val saveTime: Long = getTimeOfSave()
 
     private var dataIsOutdated = (
-        (saveTime + TimeUnit.HOURS.toMillis(6))
-                < System.currentTimeMillis()
-    )
+            (saveTime + TimeUnit.HOURS.toMillis(6))
+                    < System.currentTimeMillis()
+            )
 
     private val isInternetConnected: Boolean
         get() {
@@ -80,7 +79,8 @@ class ImdbRepository @Inject constructor(
         val movieList = moviesJoinActorsDao.getListOfActors(movieId)
         return if (movieList.isNullOrEmpty()) {
             fetchMovieCast(mediaType, movieId) ?: emptyList<MovieActorDomain>()
-        } else {
+        }
+        else {
             movieList
         }
 
@@ -97,19 +97,19 @@ class ImdbRepository @Inject constructor(
                         imdbApi.getMovieCredits(mediaType, movieId)
                     saveActorsList(response)
 
-                    Log.e(TAG, "fetchMovieCast: SHOULD RETURN RESPONSE",)
+                    Log.e(TAG, "fetchMovieCast: SHOULD RETURN RESPONSE")
                     return@withContext response.transformToMovieActorDomain()
                 } catch (e: retrofit2.HttpException) {
                     withContext(Dispatchers.Main) {
                         makeToast(e.toString())
                     }
                 } catch (e: UnknownHostException) {
-                    Log.e(TAG, "fetchMovieCast: ${e}",)
+                    Log.e(TAG, "fetchMovieCast: ${e}")
                 } catch (e: Exception) {
-                    Log.e(TAG, "fetchMovieCast: UNCATCHED EXCEPTION!!! : ${e.toString()}",)
+                    Log.e(TAG, "fetchMovieCast: UNCATCHED EXCEPTION!!! : ${e.toString()}")
                 }
             }
-            Log.e(TAG, "fetchMovieCast: RETURNING NULL",)
+            Log.e(TAG, "fetchMovieCast: RETURNING NULL")
             return@withContext null
         }
     }
@@ -144,7 +144,7 @@ class ImdbRepository @Inject constructor(
 
     suspend fun getMovieFromDataBase(movieId: Int): Movie {
         return withContext(Dispatchers.IO) {
-             moviesDao.getMovie(movieId)
+            moviesDao.getMovie(movieId)
         }
     }
 

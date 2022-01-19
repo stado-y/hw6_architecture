@@ -20,7 +20,7 @@ interface MoviesDao {
         withContext(Dispatchers.IO) {
             for (movie in movieList) {
                 movie.favorite = isMovieFavorite(movie.id) ?: false
-                Log.e("MoviesDao", "insertMovieList: ${movie.id} : ${movie.favorite}", )
+                Log.e("MoviesDao", "insertMovieList: ${movie.id} : ${movie.favorite}")
                 insertMovie(movie)
             }
         }
@@ -37,7 +37,4 @@ interface MoviesDao {
 
     @Update(entity = Movie::class, onConflict = OnConflictStrategy.REPLACE)
     fun updateMovie(movie: Movie)
-
-//    @Insert(onConflict = OnConflictStrategy.REPLACE)
-//    fun updateMovie(movie: Movie)
 }

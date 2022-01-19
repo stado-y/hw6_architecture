@@ -44,7 +44,7 @@ class MovieDetailsViewModel @Inject constructor(
         execute(request = {
             _chosenMovie.postValue(getMovieFromId(movieId))
             _actors.postValue(getActors(movieId))
-        } )
+        })
     }
 
     private suspend fun getActors(movieId: Int): List<MovieActorDomain> {

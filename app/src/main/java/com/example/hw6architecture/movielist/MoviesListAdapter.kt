@@ -14,7 +14,6 @@ import com.example.hw6architecture.immutable_values.Constants
 import com.example.hw6architecture.immutable_values.ImageSizes
 
 
-
 interface ItemClickListener {
     fun onItemClicked(movie: Movie)
     fun onFavoriteClicked(movie: Movie)
@@ -48,12 +47,12 @@ class MoviesListAdapter(
                 val rating = (item.averageRating * 10).toInt()
 
                 RatingTextView.text = Constants.RATING_FORMAT_TEMPLATE.format(rating)
-                Log.e(TAG, "bind: ${progressBarIndicator.progress}", )
+                Log.e(TAG, "bind: ${progressBarIndicator.progress}")
                 //progressBarIndicator.post {
-                    progressBarIndicator.setProgressCompat(
-                        rating,
-                        true
-                    )
+                progressBarIndicator.setProgressCompat(
+                    rating,
+                    true
+                )
                 //}
 
                 if (item.favorite) {

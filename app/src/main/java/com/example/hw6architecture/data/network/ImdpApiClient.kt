@@ -5,7 +5,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 import java.io.Serializable
 
-interface ImdbApiClient: Serializable {
+interface ImdbApiClient : Serializable {
 
     @GET("trending/{media_type}/{time_window}")
     suspend fun getMoviesList(

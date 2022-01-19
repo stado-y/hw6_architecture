@@ -1,6 +1,6 @@
 package com.example.hw6architecture.moviedetails
 
-data class MovieActorDomain (
+data class MovieActorDomain(
     val movieId: Int,
     val name: String,
     val photoURI: String?,

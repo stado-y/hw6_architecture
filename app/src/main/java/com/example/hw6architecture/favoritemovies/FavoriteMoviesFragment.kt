@@ -48,7 +48,10 @@ class FavoriteMoviesFragment : BaseMovieListFragment(), ItemClickListener {
     }
 
     override fun onItemClicked(movie: Movie) {
-        val action = FavoriteMoviesFragmentDirections.actionFavoriteMoviesFragmentToMovieDetailsFragment(movie.id)
+        val action =
+            FavoriteMoviesFragmentDirections.actionFavoriteMoviesFragmentToMovieDetailsFragment(
+                movie.id
+            )
         findNavController().navigate(action)
     }
 

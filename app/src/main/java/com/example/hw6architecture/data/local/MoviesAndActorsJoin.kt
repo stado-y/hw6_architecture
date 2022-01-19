@@ -1,12 +1,10 @@
 package com.example.hw6architecture.data.local
 
-import androidx.room.Dao
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.CASCADE
 import androidx.room.Index
 import com.example.hw6architecture.data.local.MoviesAndActorsJoin.Companion.TABLE_NAME
-import com.example.hw6architecture.moviedetails.Actor
 import com.example.hw6architecture.movielist.Movie
 import com.google.gson.annotations.SerializedName
 
@@ -30,7 +28,7 @@ import com.google.gson.annotations.SerializedName
         )
     ]
 )
-data class MoviesAndActorsJoin (
+data class MoviesAndActorsJoin(
     @SerializedName("movieId")
     val movieId: Int,
     @SerializedName("actorName")

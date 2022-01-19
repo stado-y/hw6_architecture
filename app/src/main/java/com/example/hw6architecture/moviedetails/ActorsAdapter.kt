@@ -14,7 +14,7 @@ class ActorsAdapter : ListAdapter<MovieActorDomain, ActorsAdapter.ActorsViewHold
 
     inner class ActorsViewHolder(
         private val binding: TopCastLayoutBinding
-    ): RecyclerView.ViewHolder(binding.root) {
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: MovieActorDomain) {
 
@@ -32,27 +32,34 @@ class ActorsAdapter : ListAdapter<MovieActorDomain, ActorsAdapter.ActorsViewHold
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActorsViewHolder {
 
         val view = TopCastLayoutBinding
-            .inflate(LayoutInflater.from(parent.context),
+            .inflate(
+                LayoutInflater.from(parent.context),
                 parent,
                 false
-                )
+            )
         return ActorsViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ActorsViewHolder, position: Int) {
         val current = getItem(position)
-            holder.bind(current)
+        holder.bind(current)
     }
 
     companion object {
         private val ActorDifUtil = object : DiffUtil.ItemCallback<MovieActorDomain>() {
-            override fun areItemsTheSame(oldItem: MovieActorDomain, newItem: MovieActorDomain): Boolean {
+            override fun areItemsTheSame(
+                oldItem: MovieActorDomain,
+                newItem: MovieActorDomain
+            ): Boolean {
                 return oldItem === newItem
             }
 
-            override fun areContentsTheSame(oldItem: MovieActorDomain, newItem: MovieActorDomain): Boolean {
+            override fun areContentsTheSame(
+                oldItem: MovieActorDomain,
+                newItem: MovieActorDomain
+            ): Boolean {
                 return oldItem.name == newItem.name
-                        //&& oldItem.character == newItem.character
+                //&& oldItem.character == newItem.character
             }
         }
     }

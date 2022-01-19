@@ -1,7 +1,7 @@
 package com.example.hw6architecture.data.network
 
 import com.example.hw6architecture.data.local.MoviesAndActorsJoin
-import com.example.hw6architecture.moviedetails.Actor
+import com.example.hw6architecture.data.local.Actor
 import com.example.hw6architecture.moviedetails.MovieActorDomain
 import com.google.gson.annotations.SerializedName
 
@@ -19,12 +19,9 @@ data class MovieCreditsResponse(
         cast.forEach {
             actors.add(
                 Actor(
-//                    movieId = movieId,
                     name = it.name,
                     photoURI = it.photoURI,
-//                    character = it.character,
                     popularity = it.popularity,
-//                    order = it.order,
                 )
             )
         }

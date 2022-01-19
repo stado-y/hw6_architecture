@@ -1,12 +1,9 @@
 package com.example.hw6architecture.data.local
 
-import android.content.Context
 import androidx.annotation.VisibleForTesting
 import androidx.room.*
-import androidx.room.migration.AutoMigrationSpec
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.example.hw6architecture.moviedetails.Actor
 import com.example.hw6architecture.movielist.Movie
 
 

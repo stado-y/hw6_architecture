@@ -18,7 +18,7 @@ class MovieListViewModel @Inject constructor(
     val movies: Flow<List<Movie>> = repository.getMovieList()
 
     fun updateMovie(movie: Movie) {
-        execute(request = { repository.updateMovieInDB(movie) } )
+        execute(request = { repository.updateMovieInDB(movie) })
     }
 
     override fun showError(error: Throwable?) {

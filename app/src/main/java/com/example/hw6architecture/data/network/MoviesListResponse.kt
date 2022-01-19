@@ -48,7 +48,7 @@ data class MoviesListItem(
     val overview: String,
 
     @SerializedName("poster_path")
-    val imageURi:String?,
+    val imageURi: String?,
 
     @SerializedName("backdrop_path")
     val backgroundURi: String,
