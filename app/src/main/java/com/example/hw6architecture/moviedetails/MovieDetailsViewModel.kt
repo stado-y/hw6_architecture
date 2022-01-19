@@ -6,14 +6,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hw6architecture.data.ImdbRepository
 import com.example.hw6architecture.movielist.Movie
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CompletableJob
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MovieDetailsViewModel(private val movieId: Int): ViewModel() {
-
-    private val repository = ImdbRepository.instance
+@HiltViewModel
+class MovieDetailsViewModel @Inject constructor(
+    private val repository: ImdbRepository
+) : ViewModel() {
 
     private val _actors = MutableLiveData<List<Actor>>()
     var actors: LiveData<List<Actor>> = _actors
@@ -23,12 +26,11 @@ class MovieDetailsViewModel(private val movieId: Int): ViewModel() {
 
     private val job: CompletableJob = Job()
 
-    init {
-        viewModelScope.launch(Dispatchers.IO + job) {
-            _chosenMovie.postValue(getMovieFromId(movieId))
-            _actors.postValue(getActors(movieId))
+    var movieId: Int = 0
+        set(value) {
+            field = value
+            fillLivedata(value)
         }
-    }
 
     override fun onCleared() {
         super.onCleared()
@@ -37,6 +39,12 @@ class MovieDetailsViewModel(private val movieId: Int): ViewModel() {
         }
     }
 
+    private fun fillLivedata(movieId: Int) {
+        viewModelScope.launch(Dispatchers.IO + job) {
+            _chosenMovie.postValue(getMovieFromId(movieId))
+            _actors.postValue(getActors(movieId))
+        }
+    }
 
     private suspend fun getActors(movieId: Int): List<Actor> {
         val mediaType = getMovieFromId(movieId).mediaType

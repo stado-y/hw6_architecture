@@ -1,15 +1,25 @@
-package com.example.hw6architecture.data.network
+package com.example.hw6architecture.di
 
 import com.example.hw6architecture.BuildConfig
+import com.example.hw6architecture.data.network.ImdbApiClient
+import com.example.hw6architecture.data.network.ImdbApiKeyInterceptor
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Singleton
 
+@InstallIn(SingletonComponent::class)
+@Module
+object RetrofitModule {
 
-object NetworkBuilder {
-
-    fun retrofitInit(): ImdbApiClient {
+    @Provides
+    @Singleton
+    fun provideRetrofit(): ImdbApiClient {
 
         val httpLoggingInterceptor = HttpLoggingInterceptor()
         httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY

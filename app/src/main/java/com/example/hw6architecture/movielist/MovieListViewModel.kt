@@ -1,16 +1,16 @@
 package com.example.hw6architecture.movielist
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.hw6architecture.data.ImdbRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MovieListViewModel: ViewModel() {
-
-    private val repository = ImdbRepository.instance
+@HiltViewModel
+class MovieListViewModel @Inject constructor(
+    private val repository: ImdbRepository,
+): ViewModel() {
 
     private val _movies = MutableLiveData<List<Movie>>()
     var movies: LiveData<List<Movie>> = _movies

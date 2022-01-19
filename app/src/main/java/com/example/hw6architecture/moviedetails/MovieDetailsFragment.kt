@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -14,12 +15,18 @@ import com.example.hw6architecture.databinding.FragmentMovieDetailsBinding
 import com.example.hw6architecture.immutable_values.Constants
 import com.example.hw6architecture.immutable_values.ImageSizes
 import com.example.hw6architecture.movielist.Movie
+import dagger.hilt.android.AndroidEntryPoint
+import kotlin.properties.Delegates
 
-class MovieDetailsFragment(private val movieId: Int) : Fragment() {
+@AndroidEntryPoint
+class MovieDetailsFragment() : Fragment() {
+
+    //simple class can't be lateinit
+    private var movieId by Delegates.notNull<Int>()
 
     private lateinit var binding: FragmentMovieDetailsBinding
 
-    private lateinit var viewModel: MovieDetailsViewModel
+    private val viewModel: MovieDetailsViewModel by viewModels()
 
     private val actorsAdapter = ActorsAdapter()
 
@@ -36,7 +43,9 @@ class MovieDetailsFragment(private val movieId: Int) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = MovieDetailsViewModel(movieId)
+        movieId = arguments?.getInt("movieId", 0) ?: 0
+
+        viewModel.movieId = movieId
 
         viewModel.chosenMovie.observe(viewLifecycleOwner) {
             currentMovie = it
@@ -100,5 +109,16 @@ class MovieDetailsFragment(private val movieId: Int) : Fragment() {
 
     private fun updateAdapter(actors: List<Actor>) {
         actorsAdapter.submitList(actors.sortedBy { it.order })
+    }
+
+    companion object {
+
+        fun newInstance(movieId: Int): MovieDetailsFragment {
+            val args = Bundle()
+            args.putInt("movieId", movieId)
+            val instance = MovieDetailsFragment()
+            instance.arguments = args
+            return instance
+        }
     }
 }
