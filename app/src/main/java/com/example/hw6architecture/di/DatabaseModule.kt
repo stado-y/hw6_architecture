@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.example.hw6architecture.data.local.ActorsDao
 import com.example.hw6architecture.data.local.MoviesDao
+import com.example.hw6architecture.data.local.MoviesJoinActorsDao
 import com.example.hw6architecture.data.local.MoviesRoom
 import dagger.Module
 import dagger.Provides
@@ -28,6 +29,12 @@ object DatabaseModule {
     @Singleton
     fun provideMoviesDao(database: MoviesRoom): MoviesDao {
         return database.moviesDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideMoviesJoinActorsDao(database: MoviesRoom): MoviesJoinActorsDao {
+        return database.moviesJoinActorsDao()
     }
 
     @Provides

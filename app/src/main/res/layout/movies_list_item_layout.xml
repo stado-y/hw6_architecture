@@ -44,6 +44,17 @@
             app:layout_constraintRight_toRightOf="@id/progressBarIndicator"
             />
 
+        <ImageView
+            android:id="@+id/favoriteImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_image_favorite_border"
+            app:layout_constraintTop_toBottomOf="@+id/movieListItemImage"
+            app:layout_constraintBottom_toBottomOf="@+id/movieListItemImage"
+            app:layout_constraintLeft_toLeftOf="@+id/movieListItemImage"
+            android:paddingLeft="@dimen/standart_margin"
+            />
+
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/text_style.header.movie_list_item"

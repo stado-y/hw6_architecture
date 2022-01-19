@@ -1,5 +1,6 @@
 package com.example.hw6architecture.movielist
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.hw6architecture.movielist.Movie.Companion.TABLE_NAME
@@ -17,6 +18,7 @@ data class Movie(
     val popularity: Double,
     val mediaType: String,
     val page: Int,
+    @ColumnInfo(defaultValue = "0") var favorite: Boolean,
 ) {
     companion object {
         const val TABLE_NAME = "movies_table"
